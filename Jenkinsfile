@@ -7,9 +7,9 @@ pipeline {
         DOCKER_CREDENTIALS = 'docker-credentials-id'  // Jenkins credentials ID
         
         // Application settings
-        MYSQL_ROOT_PASSWORD = credentials('mysql-root-password')  // Jenkins secret
-        API_URL = 'https://api.yourdomain.com'
-        NEXT_PUBLIC_API_URL = 'https://api.yourdomain.com'
+        MYSQL_ROOT_PASSWORD = credentials('rootpassword')  // Jenkins secret
+        API_URL = ''
+        NEXT_PUBLIC_API_URL = ''
     }
     
     stages {
