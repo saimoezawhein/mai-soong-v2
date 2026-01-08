@@ -942,6 +942,16 @@ app.get('/health', async (req, res) => {
   }
 });
 
+// Database test endpoint
+app.get('/db-test', async (req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT 1 as test');
+    res.json({ status: 'connected', result: rows });
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: err.message });
+  }
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Mai Soong API running on port ${PORT}`);
