@@ -161,60 +161,93 @@ const recordRateHistory = async (supplierId, rateType, rate, mmkAmount, thbAmoun
 };
 
 // =====================
-// AUTH API
+// FIXED AUTH API - Replace in your backend/index.js
 // =====================
-app.post('/auth/login', async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    const [rows] = await pool.query('SELECT * FROM users WHERE username = ?', [username]);
-    
-    if (rows.length === 0) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
-    
-    const user = rows[0];
-    const isValid = await bcrypt.compare(password, user.password);
-    
-    if (!isValid) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
-    
-    res.json({ id: user.id, username: user.username, email: user.email, role: user.role });
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
 
-app.post('/auth/register', async (req, res) => {
-  try {
-    const { username, email, password, registrationKey } = req.body;
-    
-    if (registrationKey !== REGISTRATION_KEY) {
-      return res.status(400).json({ error: 'Invalid registration key' });
+// Simple Login (no bcrypt - for testing)
+  app.post('/auth/login', async (req, res) => {
+    try {
+      const { username, password } = req.body;
+      console.log('Login attempt:', username);
+      
+      const [rows] = await pool.query('SELECT * FROM users WHERE username = ?', [username]);
+      console.log('Users found:', rows.length);
+      
+      if (rows.length === 0) {
+        return res.status(401).json({ error: 'Invalid credentials' });
+      }
+      
+      const user = rows[0];
+      console.log('User found:', user.username);
+      console.log('Stored password:', user.password);
+      console.log('Provided password:', password);
+      
+      // Try bcrypt first
+      let isValid = false;
+      try {
+        isValid = await bcrypt.compare(password, user.password);
+        console.log('Bcrypt compare result:', isValid);
+      } catch (bcryptError) {
+        console.log('Bcrypt error:', bcryptError.message);
+      }
+      
+      // If bcrypt fails, try plain text comparison
+      if (!isValid) {
+        isValid = (user.password === password);
+        console.log('Plain text compare result:', isValid);
+      }
+      
+      if (!isValid) {
+        return res.status(401).json({ error: 'Invalid credentials' });
+      }
+      
+      res.json({ 
+        id: user.id, 
+        username: user.username, 
+        email: user.email || '', 
+        role: user.role || 'user' 
+      });
+    } catch (e) {
+      console.error('Login error:', e);
+      res.status(500).json({ error: 'Internal Server Error' });
     }
-    
-    const [existing] = await pool.query(
-      'SELECT id FROM users WHERE username = ? OR email = ?',
-      [username, email]
-    );
-    
-    if (existing.length > 0) {
-      return res.status(400).json({ error: 'Username or email already exists' });
+  });
+
+  // Register with bcrypt
+  app.post('/auth/register', async (req, res) => {
+    try {
+      const { username, email, password, registrationKey } = req.body;
+      
+      const REGISTRATION_KEY = process.env.REGISTRATION_KEY || 'MAISOONG2025KEY';
+      
+      if (registrationKey !== REGISTRATION_KEY) {
+        return res.status(400).json({ error: 'Invalid registration key' });
+      }
+      
+      const [existing] = await pool.query(
+        'SELECT id FROM users WHERE username = ?',
+        [username]
+      );
+      
+      if (existing.length > 0) {
+        return res.status(400).json({ error: 'Username already exists' });
+      }
+      
+      const hashedPassword = await bcrypt.hash(password, 10);
+      console.log('Registering user:', username);
+      console.log('Hashed password:', hashedPassword);
+      
+      const [result] = await pool.query(
+        'INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)',
+        [username, email || '', hashedPassword, 'user']
+      );
+      
+      res.status(201).json({ id: result.insertId, message: 'Registration successful' });
+    } catch (e) {
+      console.error('Register error:', e);
+      res.status(500).json({ error: 'Internal Server Error' });
     }
-    
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const [result] = await pool.query(
-      'INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
-      [username, email, hashedPassword]
-    );
-    
-    res.status(201).json({ id: result.insertId, message: 'Registration successful' });
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
+  });
 
 // =====================
 // SUPPLIERS API
