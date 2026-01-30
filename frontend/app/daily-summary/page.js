@@ -168,7 +168,7 @@ export default function DailySummaryPage() {
         </div>
       ) : summaries.length === 0 ? (
         <div className="card text-center py-16">
-          <div className="text-6xl mb-4">📅</div>
+          <div className="text-6xl mb-4"><i className="fa-solid fa-calendar-days"></i></div>
           <h3 className="text-xl text-gray-600">No data found</h3>
           <p className="text-gray-500">Try adjusting your filters</p>
         </div>

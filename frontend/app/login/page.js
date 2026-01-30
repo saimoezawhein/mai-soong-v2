@@ -44,13 +44,13 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-500 to-blue-600 p-4">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">💱 Mai Soong</h1>
+          <h1 className="text-3xl font-bold text-gray-800"><i className="fa-solid fa-money-bill-transfer mr-2"></i>Mai Soong</h1>
           <p className="text-gray-500 mt-2">Exchange Rate Tracker</p>
         </div>
 
         {error && (
           <div className="alert alert-danger mb-6">
-            <span>⚠️</span>
+            <i className="fa-solid fa-triangle-exclamation"></i>
             <span>{error}</span>
           </div>
         )}

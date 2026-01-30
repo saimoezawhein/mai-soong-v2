@@ -580,7 +580,6 @@ export default function SupplierPage() {
             </div>
             <div className="print-area">
               <div className="receipt border-2 border-gray-300" ref={receiptRef}>
-                <div className="receipt border-2 border-gray-300">
                   <div className="receipt-header">
                     <h3 className="text-xl font-bold">{selectedReceipt.business_name}</h3>
                     <p className="text-gray-500">Currency Exchange</p>
@@ -615,7 +614,6 @@ export default function SupplierPage() {
                   <div className="text-center mt-6 text-gray-500 text-xs">
                     <p>Thank you for your business!</p>
                   </div>
-                </div>
               </div>
             </div>
           </div>

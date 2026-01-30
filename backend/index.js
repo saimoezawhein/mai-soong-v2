@@ -23,12 +23,13 @@ const formatBangkokDateTime = (date) => {
 };
 
 // Database connection pool
+const dbPassword = process.env.DB_PASSWORD;
 const pool = mysql.createPool({
   host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'maiuser',
-  password: process.env.DB_PASSWORD || 'maipassword',
+  user: process.env.DB_USER || 'root',
+  password: dbPassword === '' ? undefined : dbPassword,
   database: process.env.DB_NAME || 'mai_soong',
-  port: process.env.DB_PORT || 3306,
+  port: process.env.DB_PORT || 3308,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,

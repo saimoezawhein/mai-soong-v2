@@ -39,8 +39,9 @@ export default function DashboardPage() {
       const suppliersData = await suppliersRes.json();
       const summaryData = await summaryRes.json();
 
-      setSuppliers(suppliersData);
-      setTodaySummary(summaryData);
+      // Handle error responses - ensure suppliers is always an array
+      setSuppliers(Array.isArray(suppliersData) ? suppliersData : []);
+      setTodaySummary(summaryData.error ? null : summaryData);
     } catch (err) {
       console.error('Failed to fetch data:', err);
     } finally {
@@ -161,7 +162,7 @@ export default function DashboardPage() {
       {/* Suppliers Grid */}
       {suppliers.length === 0 ? (
         <div className="card text-center py-16">
-          <div className="text-6xl mb-4">💼</div>
+          <div className="text-6xl mb-4"><i className="fa-solid fa-briefcase"></i></div>
           <h3 className="text-xl font-medium text-gray-600 mb-2">No suppliers yet</h3>
           <p className="text-gray-500 mb-6">Add your first supplier to get started</p>
           <button onClick={() => setShowAddModal(true)} className="btn btn-gradient">
@@ -185,7 +186,7 @@ export default function DashboardPage() {
                   <h3 className="text-lg font-semibold">{supplier.name}</h3>
                   {supplier.low_balance_alert && (
                     <span className="text-xs bg-white/20 px-2 py-1 rounded-full">
-                      ⚠️ Low Balance
+                      <i className="fa-solid fa-triangle-exclamation mr-1"></i> Low Balance
                     </span>
                   )}
                 </div>

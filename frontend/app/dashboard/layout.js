@@ -39,10 +39,10 @@ export default function DashboardLayout({ children }) {
   };
 
   const navLinks = [
-    { href: '/dashboard', label: '📊 Dashboard', icon: '📊' },
-    { href: '/daily-summary', label: '📅 Daily Summary', icon: '📅' },
-    { href: '/rate-history', label: '📈 Rate History', icon: '📈' },
-    { href: '/reports', label: '📋 Reports', icon: '📋' },
+    { href: '/dashboard', label: 'Dashboard', icon: 'fa-solid fa-chart-bar' },
+    { href: '/daily-summary', label: 'Daily Summary', icon: 'fa-solid fa-calendar-days' },
+    { href: '/rate-history', label: 'Rate History', icon: 'fa-solid fa-chart-line' },
+    { href: '/reports', label: 'Reports', icon: 'fa-solid fa-file-lines' },
   ];
 
   if (!user) return null;
@@ -55,7 +55,7 @@ export default function DashboardLayout({ children }) {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link href="/dashboard" className="text-xl font-bold flex items-center gap-2">
-              💱 Mai Soong
+              <i className="fa-solid fa-money-bill-transfer"></i> Mai Soong
             </Link>
 
             {/* Navigation */}
@@ -70,7 +70,7 @@ export default function DashboardLayout({ children }) {
                       : 'hover:bg-white/10'
                   }`}
                 >
-                  {link.label}
+                  <i className={link.icon + ' mr-1'}></i> {link.label}
                 </Link>
               ))}
             </nav>
@@ -85,7 +85,7 @@ export default function DashboardLayout({ children }) {
                     alerts.length > 0 ? 'animate-pulse-slow' : ''
                   }`}
                 >
-                  🔔
+                  <i className="fa-solid fa-bell"></i>
                   {alerts.length > 0 && (
                     <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
                       {alerts.length}
@@ -96,7 +96,7 @@ export default function DashboardLayout({ children }) {
                 {showAlerts && (
                   <div className="absolute right-0 top-12 w-80 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden">
                     <div className="p-3 bg-gray-50 border-b font-medium text-gray-800">
-                      ⚠️ Low Balance Alerts
+                      <i className="fa-solid fa-triangle-exclamation mr-1"></i> Low Balance Alerts
                     </div>
                     {alerts.length === 0 ? (
                       <div className="p-4 text-gray-500 text-center">
@@ -150,7 +150,7 @@ export default function DashboardLayout({ children }) {
                     : 'hover:bg-white/10'
                 }`}
               >
-                {link.icon}
+                <i className={link.icon}></i>
               </Link>
             ))}
           </div>
@@ -160,7 +160,7 @@ export default function DashboardLayout({ children }) {
       {/* Low Balance Alert Banner */}
       {alerts.length > 0 && (
         <div className="bg-red-500 text-white px-4 py-2 text-center text-sm">
-          ⚠️ {alerts.length} supplier(s) have low balance!
+          <i className="fa-solid fa-triangle-exclamation mr-1"></i> {alerts.length} supplier(s) have low balance!
         </div>
       )}
 
